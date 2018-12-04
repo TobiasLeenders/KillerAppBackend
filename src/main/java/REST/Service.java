@@ -14,7 +14,7 @@ public class Service {
         ServletContextHandler context = new
                 ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        Server jettyServer = new Server(9998);
+        Server jettyServer = new Server(8080);
         jettyServer.setHandler(context);
         ServletHolder jerseyServlet =
                 context.addServlet(ServletContainer.class, "/*");
