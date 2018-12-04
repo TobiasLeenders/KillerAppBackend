@@ -107,7 +107,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.4.0</version>
                 <configuration>
-                    <mainClass>KillerAppBackend.App</mainClass>
+                    <mainClass>KillerAppBackend.App.Service</mainClass>
                     <cleanupDaemonThreads>false</cleanupDaemonThreads>
                 </configuration>
             </plugin>
