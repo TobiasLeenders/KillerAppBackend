@@ -18,4 +18,4 @@ RUN mvn package
 EXPOSE 8080
 
 # execute it
-CMD ["mvn", "exec:java", "-Dexec.mainClass=src.main.java.REST.Service"]
+CMD ["mvn", "exec:java", "-Dexec.mainClass=REST.Service"]
