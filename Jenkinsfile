@@ -39,9 +39,9 @@ pipeline {
       //  }
       //}
     }
-    stage('Deploy dockerbranch') {
+    stage('Deploy') {
            when {
-             branch 'dockerbranch'
+             branch 'master'
            }
            steps {
              sh 'docker build -t killerapp-backend .'
