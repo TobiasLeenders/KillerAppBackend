@@ -18,4 +18,4 @@ RUN mvn package
 EXPOSE 9998
 
 # execute it
-CMD ["mvn", "exec:java", "-Dexec.mainClass=REST.Service", "-d"]
+CMD ["mvn", "exec:java", "-Dexec.mainClass=REST.Service"]
