@@ -52,7 +52,7 @@ pipeline {
          }
     stage('Frontend tests') {
               steps {
-                 build job: '../../TobiasKillerappAngularTest/'
+                 build job: '../TobiasKillerappAngularTest/'
               }
     }
   }
