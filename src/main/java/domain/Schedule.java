@@ -2,6 +2,7 @@ package domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table
@@ -24,19 +25,26 @@ public class Schedule {
     @ManyToOne(cascade = CascadeType.ALL)
     private Group group;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Activity activity;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Activity> activity;
 
     public Schedule(){
 
     }
 
-    public Schedule(String name, LocalDateTime startTime, int duration, Frequency frequency, User user) {
+    public Schedule(String name, LocalDateTime startTime, int duration, Frequency frequency, User user, List<Activity> activity) {
         this.name = name;
         this.startTime = startTime;
         this.duration = duration;
         this.frequency = frequency;
         this.user = user;
+        this.activity = activity;
+    }
+
+    public Schedule(String name, int duration, List<Activity> activity) {
+        this.name = name;
+        this.duration = duration;
+        this.activity = activity;
     }
 
     public Schedule(String name, LocalDateTime startTime, int duration, Frequency frequency, Group group) {
@@ -102,4 +110,8 @@ public class Schedule {
     public void setGroup(Group group) {
         this.group = group;
     }
+
+    public List<Activity> getActivity() { return activity; }
+
+    public void setActivity(List<Activity> activity) { this.activity = activity; }
 }

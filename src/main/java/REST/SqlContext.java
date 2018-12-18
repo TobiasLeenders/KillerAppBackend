@@ -8,6 +8,7 @@ import domain.User;
 import javax.persistence.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SqlContext implements SqlContextable {
@@ -51,13 +52,19 @@ public class SqlContext implements SqlContextable {
         emFactory.close();
     }
 
-    public void newSchedule(String activityname, String categoryname){
+    public void newSchedule(String schedulename, int duration, ArrayList<String> activitynames, ArrayList<String> activitycategories){
         EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("killerappPersistence");
 
         EntityManager entityManager = emFactory.createEntityManager();
         entityManager.getTransaction().begin();
 
-        Schedule schedule = new Schedule();
+        List<Activity> addActivities = new ArrayList<>();
+        for (int i = 0; i < activitynames.size(); i++){
+            Category addCategory = new Category(activitycategories.get(i));
+            Activity addActivity = new Activity(activitynames.get(i), addCategory);
+            addActivities.add(addActivity);
+        }
+        Schedule schedule = new Schedule(schedulename, duration, addActivities);
         entityManager.persist(schedule);
         entityManager.getTransaction().commit();
 

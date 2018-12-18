@@ -2,6 +2,7 @@ package REST;
 
 import com.google.gson.JsonObject;
 import domain.Activity;
+import domain.Frequency;
 import domain.Schedule;
 import domain.User;
 
@@ -9,6 +10,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("api")
@@ -45,7 +48,7 @@ public class ApiService {
     @POST
     @Path("/newActivity")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response newActivity(@FormParam("activityname") String activityname, @FormParam("password") String categoryname){
+    public Response newActivity(@FormParam("activityname") String activityname, @FormParam("categoryname") String categoryname){
         try {
             Service.context.newActivity(activityname, categoryname);
         } catch (Exception e) {
@@ -87,9 +90,9 @@ public class ApiService {
     @POST
     @Path("/newSchedule")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response newSchedule(@FormParam("activityname") String activityname, @FormParam("password") String categoryname){
+    public Response newSchedule(@FormParam("schedulename") String schedulename, @FormParam("duration") int duration, @FormParam("activities") ArrayList<String> activitynames, @FormParam("categories") ArrayList<String> activitycategories){
         try {
-            Service.context.newSchedule(activityname, categoryname);
+            Service.context.newSchedule(schedulename, duration, activitynames, activitycategories);
         } catch (Exception e) {
             return Response.status(400).header("Access-Control-Allow-Origin", "*").build();
         }

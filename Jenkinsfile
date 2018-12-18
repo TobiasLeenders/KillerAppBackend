@@ -50,6 +50,11 @@ pipeline {
              sh 'docker image prune -f'
            }
          }
+    stage('Frontend tests') {
+              steps {
+                 build job: '../../TobiasKillerappAngularTest/'
+              }
+    }
   }
   post {
     always {
