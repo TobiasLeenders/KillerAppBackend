@@ -1,6 +1,7 @@
 package REST;
 
 import domain.Activity;
+import domain.Frequency;
 import domain.Schedule;
 import domain.User;
 
@@ -11,7 +12,9 @@ public interface SqlContextable {
     void register(String username, String password, String email);
     User login(String username, String password);
     void newActivity(String activityname, String categoryname);
-    void newSchedule(String schedulename, int duration, ArrayList<String> activitynames, ArrayList<String> activitycategories);
+    void newGroup(String groupname, List<Integer> userids);
+    void newSchedule(String schedulename, int duration, String frequency, String startTime, int groupId, int userId, List<String> activitynames, List<String> activitycategories);
     List<Activity> getActivities();
+    List<Activity> getScheduleActivities(int scheduleid);
     List<Schedule> getSchedules(int userid);
 }

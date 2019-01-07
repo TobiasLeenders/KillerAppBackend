@@ -20,11 +20,11 @@
         <property name="connection.pool_size">1</property>
         <property name="current_session_context_class">thread</property>
 
+        <mapping class="domain.GroupSchedule" />
         <mapping class="domain.User" />
         <mapping class="domain.Category" />
-        <mapping class="domain.Group" />
-        <mapping class="domain.Schedule" />
         <mapping class="domain.Activity" />
+        <mapping class="domain.Schedule" />
 
     </session-factory>
 </hibernate-configuration>

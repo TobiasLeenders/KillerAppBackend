@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table
-public class Group {
+public class GroupSchedule {
     @Id
     @GeneratedValue
     private Long id;
@@ -15,11 +15,11 @@ public class Group {
     @OneToMany(cascade = CascadeType.ALL)
     private List<User> userlist;
 
-    public Group(){
+    public GroupSchedule(){
 
     }
 
-    public Group(String name, List<User> users) {
+    public GroupSchedule(String name, List<User> users) {
         this.name = name;
         this.userlist = users;
     }

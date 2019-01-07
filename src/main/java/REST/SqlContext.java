@@ -1,13 +1,12 @@
 package REST;
 
-import domain.Activity;
-import domain.Category;
-import domain.Schedule;
-import domain.User;
+import domain.*;
 
 import javax.persistence.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,52 @@ public class SqlContext implements SqlContextable {
         emFactory.close();
     }
 
-    public void newSchedule(String schedulename, int duration, ArrayList<String> activitynames, ArrayList<String> activitycategories){
+    public void newGroup(String groupName, List<Integer> userids){
+        //, List<Integer> userId
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("killerappPersistence");
+
+        EntityManager entityManager = emFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+
+        GroupSchedule groupSchedule = new GroupSchedule();
+        List<User> currentGroup = new ArrayList<>();
+        if (groupSchedule.getUsers() != null){
+            currentGroup = groupSchedule.getUsers();
+        }
+        else {
+            currentGroup = new ArrayList<>();
+        }
+        for (int i = 0; i < userids.size(); i++){
+            /*User userAddToGroup = entityManager.find(User.class, userids.get(i));
+            groupSchedule.getUsers().add(userAddToGroup);*/
+            User userAddToGroup = entityManager.find(User.class, (long)userids.get(i));
+
+            currentGroup.add(userAddToGroup);
+        }
+        groupSchedule.setUsers(currentGroup);
+        /*User userAddToGroup = entityManager.find(User.class, (long)userids);
+        if (groupSchedule.getUsers() != null){
+            List<User> currentGroup = groupSchedule.getUsers();
+            currentGroup.add(userAddToGroup);
+            groupSchedule.setUsers(currentGroup);
+        }
+        else {
+            List<User> userselse = new ArrayList<>();
+            userselse.add(userAddToGroup);
+            groupSchedule.setUsers(userselse);
+        }*/
+
+        //User addUser = new User((long)1, "test", "test@test.com", "test@test.com");
+        groupSchedule.setName(groupName);
+
+        entityManager.merge(groupSchedule);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+        emFactory.close();
+    }
+
+    public void newSchedule(String schedulename, int duration, String frequency, String startTime, int groupId, int userId, List<String> activitynames, List<String> activitycategories){
         EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("killerappPersistence");
 
         EntityManager entityManager = emFactory.createEntityManager();
@@ -60,11 +104,18 @@ public class SqlContext implements SqlContextable {
 
         List<Activity> addActivities = new ArrayList<>();
         for (int i = 0; i < activitynames.size(); i++){
-            Category addCategory = new Category(activitycategories.get(i));
+            //Category addCategory = new Category(activitycategories.get(i));
+            //Category addCategory = entityManager.find(Category.class, (long)activitycategories.get(i));
+            Category addCategory = new Category("testCategory");
             Activity addActivity = new Activity(activitynames.get(i), addCategory);
             addActivities.add(addActivity);
         }
-        Schedule schedule = new Schedule(schedulename, duration, addActivities);
+
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        //LocalDateTime formattedDateTime = LocalDateTime.parse(startTime, formatter);
+        LocalDateTime formattedDateTime = LocalDateTime.now();
+        GroupSchedule addGroup = entityManager.find(GroupSchedule.class, (long)groupId);
+        Schedule schedule = new Schedule(schedulename, formattedDateTime, duration, domain.Frequency.valueOf(frequency), addGroup, addActivities);
         entityManager.persist(schedule);
         entityManager.getTransaction().commit();
 
@@ -77,6 +128,18 @@ public class SqlContext implements SqlContextable {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         return em.createQuery( "from Activity ", Activity.class ).getResultList();
+    }
+
+    public List<Activity> getScheduleActivities(int scheduleid) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("killerappPersistence");
+        EntityManager em = emf.createEntityManager();
+        //em.getTransaction().begin();
+        Schedule schedule = em.find(Schedule.class, (long)scheduleid);
+        List<Activity> activitiesList = schedule.getActivity();
+        //em.getTransaction().commit();
+        em.close();
+        emf.close();
+        return activitiesList;
     }
 
     public List<Schedule> getSchedules(int userid){

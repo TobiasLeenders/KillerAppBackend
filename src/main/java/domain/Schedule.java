@@ -23,7 +23,7 @@ public class Schedule {
     private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Group group;
+    private GroupSchedule group;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Activity> activity;
@@ -32,27 +32,28 @@ public class Schedule {
 
     }
 
-    public Schedule(String name, LocalDateTime startTime, int duration, Frequency frequency, User user, List<Activity> activity) {
+    public Schedule(String name, LocalDateTime startTime, int duration, Frequency frequency, User user, List<Activity> activities) {
         this.name = name;
         this.startTime = startTime;
         this.duration = duration;
         this.frequency = frequency;
         this.user = user;
-        this.activity = activity;
+        this.activity = activities;
     }
 
-    public Schedule(String name, int duration, List<Activity> activity) {
+    /*public Schedule(String name, int duration, List<Activity> activity) {
         this.name = name;
         this.duration = duration;
         this.activity = activity;
-    }
+    }*/
 
-    public Schedule(String name, LocalDateTime startTime, int duration, Frequency frequency, Group group) {
+    public Schedule(String name, LocalDateTime startTime, int duration, Frequency frequency, GroupSchedule group, List<Activity> activities) {
         this.name = name;
         this.startTime = startTime;
         this.duration = duration;
         this.frequency = frequency;
         this.group = group;
+        this.activity = activities;
     }
 
     public Long getId() {
@@ -103,11 +104,11 @@ public class Schedule {
         this.user = user;
     }
 
-    public Group getGroup() {
+    public GroupSchedule getGroup() {
         return group;
     }
 
-    public void setGroup(Group group) {
+    public void setGroup(GroupSchedule group) {
         this.group = group;
     }
 
