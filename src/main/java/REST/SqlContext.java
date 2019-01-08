@@ -1,6 +1,7 @@
 package REST;
 
 import domain.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.sql.DriverManager;
@@ -135,6 +136,7 @@ public class SqlContext implements SqlContextable {
         EntityManager em = emf.createEntityManager();
         //em.getTransaction().begin();
         Schedule schedule = em.find(Schedule.class, (long)scheduleid);
+        Hibernate.initialize(schedule.getActivity());
         List<Activity> activitiesList = schedule.getActivity();
         //em.getTransaction().commit();
         em.close();
@@ -147,5 +149,16 @@ public class SqlContext implements SqlContextable {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         return em.createQuery( "from Schedule ", Schedule.class ).getResultList();
+    }
+
+    public List<Schedule> getAllSchedules(int userid){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("killerappPersistence");
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        List<Schedule> allschedules = em.createQuery( "from Schedule ", Schedule.class ).getResultList();
+        for (Schedule scheduleaddactivities: allschedules){
+            scheduleaddactivities.getActivity();
+        }
+        return allschedules;
     }
 }

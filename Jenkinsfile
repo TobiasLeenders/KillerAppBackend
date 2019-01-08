@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  triggers {
+    cron('10 10 * * *')
+  }
   options {
     disableConcurrentBuilds()
     timeout(time: 10, unit: 'MINUTES')

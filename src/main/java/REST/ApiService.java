@@ -5,6 +5,7 @@ import domain.Activity;
 import domain.Frequency;
 import domain.Schedule;
 import domain.User;
+import org.hibernate.Hibernate;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -133,6 +134,43 @@ public class ApiService {
 
                 innerObject.addProperty("ScheduleId", result.get(i).getId());
                 innerObject.addProperty("ScheduleName", result.get(i).getName());
+                //innerObject.addProperty("Activities", result.get(i).getActivity());
+                schedulesObject.add("" + i, innerObject);
+            }
+            json.add("Schedules", schedulesObject);
+        }
+
+        return json.toString();
+    }
+
+    @GET
+    @Path("/getAllSchedules/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllSchedule(@PathParam("userId") int userid) {
+        List<Schedule> result = null;
+        try {
+            result = Service.context.getAllSchedules(userid);
+        } catch (Exception e) {
+            //ignore
+        }
+
+        JsonObject json = new JsonObject();
+        JsonObject schedulesObject = new JsonObject();
+
+        if (result != null){
+            for (int i = 0; i < result.size(); i++){
+                JsonObject innerObject = new JsonObject();
+
+                innerObject.addProperty("ScheduleId", result.get(i).getId());
+                innerObject.addProperty("ScheduleName", result.get(i).getName());
+                for (int j = 0; j < result.get(i).getActivity().size(); j++){
+                    JsonObject activityObject = new JsonObject();
+
+                    activityObject.addProperty("ActivityId", result.get(i).getActivity().get(j).getId());
+                    activityObject.addProperty("ActivityName", result.get(i).getActivity().get(j).getName());
+                    activityObject.addProperty("ActivityCategory", result.get(i).getActivity().get(j).getCategory().getName());
+                    innerObject.add("Activities" + j, activityObject);
+                }
                 //innerObject.addProperty("Activities", result.get(i).getActivity());
                 schedulesObject.add("" + i, innerObject);
             }

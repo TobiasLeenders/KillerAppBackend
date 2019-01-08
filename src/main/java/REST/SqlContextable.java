@@ -17,4 +17,5 @@ public interface SqlContextable {
     List<Activity> getActivities();
     List<Activity> getScheduleActivities(int scheduleid);
     List<Schedule> getSchedules(int userid);
+    List<Schedule> getAllSchedules(int userid);
 }
