@@ -29,7 +29,7 @@ pipeline {
     stage('Build') {
       steps {
         sh 'mvn clean install -B -DskipTests'
-		sh 'mvn package'
+		sh 'mvn package -Dmaven.test.skip'
       }
     }
     stage('Test') {
