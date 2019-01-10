@@ -57,7 +57,7 @@ public class HibernateTest {
 
         // Assert if all the data that has been entered in the database is correct
         for (int i = 0; i < schedulesList.size(); i++){
-            Assert.assertEquals(schedulesList.get(i).getName(), resultList.get(i).getCategory());
+            Assert.assertEquals(schedulesList.get(i).getName(), resultList.get(i).getName());
             //Assert.assertEquals(schedulesList.get(i).getFrequency(), resultList.get(i).getFrequency());
         }
     }
