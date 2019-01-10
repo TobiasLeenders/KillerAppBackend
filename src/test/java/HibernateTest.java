@@ -1,5 +1,3 @@
-package hibernate;
-
 import domain.*;
 import junit.framework.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +18,7 @@ public class HibernateTest {
     }
 
     @Test
-    public void createSchedules(){
+    public void createSchedulesTest(){
 
         Session session = HibernateUtil.getSessionFactory().openSession();
 
