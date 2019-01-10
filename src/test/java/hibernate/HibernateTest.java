@@ -50,15 +50,14 @@ public class HibernateTest {
 
         Query q = session.createQuery("From Activity ");
 
-        List<Schedule> resultList = q.list();
+        List<Activity> resultList = q.list();
 
         // Assert if amount of matches added to the database equals the amount of matches in the database
         Assert.assertEquals(schedulesList.size(), resultList.size());
 
         // Assert if all the data that has been entered in the database is correct
-        for (int i = 0; i > schedulesList.size(); i++){
-            Assert.assertEquals(schedulesList.get(i).getName(), resultList.get(i).getName());
-            //Assert.assertEquals(schedulesList.get(i).getDuration(), resultList.get(i).getDuration());
+        for (int i = 0; i < schedulesList.size(); i++){
+            Assert.assertEquals(schedulesList.get(i).getName(), resultList.get(i).getCategory());
             //Assert.assertEquals(schedulesList.get(i).getFrequency(), resultList.get(i).getFrequency());
         }
     }
