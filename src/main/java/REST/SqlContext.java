@@ -2,6 +2,7 @@ package REST;
 
 import domain.*;
 import org.hibernate.Hibernate;
+import util.HashString;
 
 import javax.persistence.*;
 import java.sql.DriverManager;
@@ -10,8 +11,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class SqlContext implements SqlContextable {
+
+    HashString hashing = new HashString();
 
     public void register(String username, String password, String email){
         EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("killerappPersistence");
@@ -19,7 +23,9 @@ public class SqlContext implements SqlContextable {
         EntityManager entityManager = emFactory.createEntityManager();
         entityManager.getTransaction().begin();
 
-        User user = new User(username, password, email);
+        String hashedPassword = hashing.hashString(password);
+
+        User user = new User(username, hashedPassword, email);
         entityManager.persist(user);
         entityManager.getTransaction().commit();
 
@@ -32,8 +38,19 @@ public class SqlContext implements SqlContextable {
 
         EntityManager entityManager = emFactory.createEntityManager();
         entityManager.getTransaction().begin();
+
+        String hashedLoginPassword = hashing.hashString(password);
+
         User user = null;
-        user = entityManager.createQuery("from User where username = :username and password = :password", User.class).setParameter("username", username).setParameter("password", password).getSingleResult();
+        user = entityManager.createQuery("from User where username = :username and password = :password", User.class).setParameter("username", username).setParameter("password", hashedLoginPassword).getSingleResult();
+        if (user != null){
+            UUID uuid = UUID.randomUUID();
+            user.setToken(uuid.toString());
+
+            entityManager.persist(user);
+            entityManager.getTransaction().commit();
+
+        }
         return user;
     }
 

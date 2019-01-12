@@ -2,17 +2,12 @@ package REST;
 
 import com.google.gson.JsonObject;
 import domain.Activity;
-import domain.Frequency;
 import domain.Schedule;
 import domain.User;
-import org.hibernate.Hibernate;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,8 +36,10 @@ public class ApiService {
             //return Response.status(400).header("Access-Control-Allow-Origin", "*").build();
         }
         JsonObject json = new JsonObject();
+        json.addProperty("id", loginUser.getId());
         json.addProperty("username", loginUser.getUsername());
         json.addProperty("password", loginUser.getPassword());
+        json.addProperty("token", loginUser.getToken());
         return json.toString();
         //return Response.status(200).header("Access-Control-Allow-Origin", "*").build();
     }
