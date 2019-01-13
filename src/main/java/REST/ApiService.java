@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import domain.Activity;
 import domain.Schedule;
 import domain.User;
+import jdk.nashorn.internal.objects.annotations.Getter;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -43,6 +44,22 @@ public class ApiService {
         return json.toString();
         //return Response.status(200).header("Access-Control-Allow-Origin", "*").build();
     }
+
+    @GET
+    @Path("/checkToken/{userid}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String checkToken(@PathParam("userid") int userid, @PathParam("token") String tokenfrontend) {
+        String tokencheck = null;
+        JsonObject jsonobject = new JsonObject();
+        try {
+            tokencheck = Service.context.checkToken(userid, tokenfrontend);
+            jsonobject.addProperty("TokenIntegrity", tokencheck);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return jsonobject.toString();
+    }
+
 
     @POST
     @Path("/newActivity")

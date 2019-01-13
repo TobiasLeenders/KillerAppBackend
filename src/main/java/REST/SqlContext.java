@@ -51,7 +51,30 @@ public class SqlContext implements SqlContextable {
             entityManager.getTransaction().commit();
 
         }
+        entityManager.close();
+        emFactory.close();
         return user;
+    }
+
+    public String checkToken(int userid, String tokenfrontend) {
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("killerappPersistence");
+
+        EntityManager entityManager = emFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        User tokenuser = entityManager.find(User.class, (long)userid);
+        entityManager.close();
+        emFactory.close();
+        if (tokenuser.getToken() != null){
+            if (tokenuser.getToken().equals(tokenfrontend)){
+                return "CorrectToken";
+            }
+            else {
+                return "FalseToken";
+            }
+        }
+        else {
+            return "FalseToken";
+        }
     }
 
     public void newActivity(String activityname, String categoryname){
@@ -133,7 +156,8 @@ public class SqlContext implements SqlContextable {
         //LocalDateTime formattedDateTime = LocalDateTime.parse(startTime, formatter);
         LocalDateTime formattedDateTime = LocalDateTime.now();
         GroupSchedule addGroup = entityManager.find(GroupSchedule.class, (long)groupId);
-        Schedule schedule = new Schedule(schedulename, formattedDateTime, duration, domain.Frequency.valueOf(frequency), addGroup, addActivities);
+        User addUser = entityManager.find(User.class, (long)userId);
+        Schedule schedule = new Schedule(schedulename, formattedDateTime, duration, domain.Frequency.valueOf(frequency), addUser, addActivities);
         entityManager.persist(schedule);
         entityManager.getTransaction().commit();
 
@@ -165,7 +189,8 @@ public class SqlContext implements SqlContextable {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("killerappPersistence");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        return em.createQuery( "from Schedule ", Schedule.class ).getResultList();
+        User finduser = em.find(User.class, (long) userid);
+        return em.createQuery( "from Schedule where user = :userid", Schedule.class ).setParameter("userid", finduser).getResultList();
     }
 
     public List<Schedule> getAllSchedules(int userid){
