@@ -1,5 +1,6 @@
 package REST;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import domain.Activity;
 import domain.Schedule;
@@ -10,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 @Path("api")
@@ -140,18 +142,26 @@ public class ApiService {
         }
 
         JsonObject json = new JsonObject();
+        //JsonArray jsonArray = new JsonArray();
         JsonObject schedulesObject = new JsonObject();
+        int j = 0;
 
         if (result != null){
             for (int i = 0; i < result.size(); i++){
                 JsonObject innerObject = new JsonObject();
+                //JsonArray innerArray = new JsonArray();
 
-                innerObject.addProperty("ScheduleId", result.get(i).getId());
+                innerObject.addProperty("ScheduleId", result.get(i).getId().toString());
                 innerObject.addProperty("ScheduleName", result.get(i).getName());
-                //innerObject.addProperty("Activities", result.get(i).getActivity());
-                schedulesObject.add("" + i, innerObject);
+                //innerArray.add(result.get(i).getId().toString());
+                //innerArray.add(result.get(i).getName());
+                //schedulesObject.add("" + i, innerObject);
+                json.add("" + i, innerObject);
+                j++;
+                //jsonArray.add(innerArray);
             }
-            json.add("Schedules", schedulesObject);
+            json.addProperty("length", j);
+            //json.add("Schedules", schedulesObject);
         }
 
         return json.toString();
